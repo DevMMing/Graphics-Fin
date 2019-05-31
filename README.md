@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# MDL-Anim
-=======
 # Graphics-Fin
 ## Names
 Matthew Ming
@@ -15,4 +12,3 @@ Not a Team Team
 * New Shapes
   * Cylinders
   * Cone
->>>>>>> 467766ce55ef406740acc9709e14ba9a8468dbb0
