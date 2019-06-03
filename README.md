@@ -1,8 +1,10 @@
 # Graphics-Fin
 ## Names
 Matthew Ming
+
 ## Team Name
-Not a Team Team
+Pneumonoultramicroscopicsilicovolcanoconiosis
+
 ## Features List
 * light
 * mesh
