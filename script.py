@@ -65,6 +65,41 @@ def second_pass( commands, num_frames ):
                     frames[i][knob]=startP+d*(i-startF)
     return frames
 
+def third_pass():
+    """
+    symbol['cs']=[]
+    
+    """
+    pass
+
+def saveknobs(name):
+    """
+    dict=[]
+    for command in commands:
+        c = command['op']
+        args = command['args']
+        knob = command['knob']
+        dict.append(knob)
+    return dict
+    """
+    pass
+
+def set():
+    """
+    for command in commands:
+        c = command['op']
+        args = command['args']
+        if c='set':
+            
+    """
+    pass
+
+#cylinder/frustum/cone
+"""
+http://paulbourke.net/geometry/circlesphere/
+https://www.gamedev.net/forums/topic/520806-can-anyone-explain-algorithm-behind-drawing-a-cylinder/
+"""
+
 def run(filename):
     """
     This function runs an mdl script
