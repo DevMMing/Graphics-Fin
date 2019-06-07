@@ -28,7 +28,7 @@ def first_pass( commands ):
         if c=="frames":
             num_frames=int(args[0])
         elif c=="basename":
-            name=args[0]
+            name=args[0]     
     return (name, num_frames)
 
 """======== second_pass( commands ) ==========
@@ -154,6 +154,7 @@ def run(filename):
                 symbols[frame][1] = frames[i][frame]
         for command in commands:
             #print command
+            print symbols
             c = command['op']
             args = command['args']
             knob_value = 1
@@ -221,6 +222,13 @@ def run(filename):
                 tmp = []
             elif c == 'push':
                 stack.append([x[:] for x in stack[-1]] )
+            elif c == 'set':
+                symbols[command["knob"]][1]=args[0]
+            elif c == 'saveknobs':
+                knobs=[]
+                for value in symbols[-1].values():
+                    if value[0]="knob":
+                        knobs.append(value)
             elif c == 'pop':
                 stack.pop()
             elif c == 'display':
