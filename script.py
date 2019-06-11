@@ -63,36 +63,9 @@ def second_pass( commands, num_frames ):
             for i in range(num_frames):
                 if i >=startF and i <= endF:
                     frames[i][knob]=startP+d*(i-startF)
+            #add something to make lights move
     return frames
 
-def third_pass():
-    """
-    symbol['cs']=[]
-    
-    """
-    pass
-
-def saveknobs(name):
-    """
-    dict=[]
-    for command in commands:
-        c = command['op']
-        args = command['args']
-        knob = command['knob']
-        dict.append(knob)
-    return dict
-    """
-    pass
-
-def set():
-    """
-    for command in commands:
-        c = command['op']
-        args = command['args']
-        if c='set':
-            
-    """
-    pass
 
 #cylinder/frustum/cone
 """
@@ -229,7 +202,14 @@ def run(filename):
                 for value in symbols[-1].values():
                     if value[0]="knob":
                         knobs.append(value)
-            elif c == 'pop':
+            elif c =="tween":
+                knob_list.values()
+                pass
+                for i in knob_list.values():
+                    if  = args[1]-args[]
+
+                #if startValue
+     :       elif c == 'pop':
                 stack.pop()
             elif c == 'display':
                 display(screen)
