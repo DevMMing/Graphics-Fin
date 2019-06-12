@@ -72,7 +72,8 @@ def second_pass( commands, num_frames ):
 http://paulbourke.net/geometry/circlesphere/
 https://www.gamedev.net/forums/topic/520806-can-anyone-explain-algorithm-behind-drawing-a-cylinder/
 """
-
+#adding save_coordinate_system later have to add new arg to all functions
+#shading i need to figure out
 def run(filename):
     """
     This function runs an mdl script
@@ -121,13 +122,14 @@ def run(filename):
         consts = ''
         coords = []
         coords1 = []
+        knoblist={}
         
         if num_frames > 1:
             for frame in frames[i]: 
                 symbols[frame][1] = frames[i][frame]
         for command in commands:
-            #print command
-            print symbols
+            print command
+            #print symbols
             c = command['op']
             args = command['args']
             knob_value = 1
@@ -195,21 +197,29 @@ def run(filename):
                 tmp = []
             elif c == 'push':
                 stack.append([x[:] for x in stack[-1]] )
-            elif c == 'set':
+            elif c == 'set':#or set_knobs
                 symbols[command["knob"]][1]=args[0]
-            elif c == 'saveknobs':
+            elif c == 'save_knobs':
                 knobs=[]
                 for value in symbols[-1].values():
-                    if value[0]="knob":
+                    if value[0]=="knob":
                         knobs.append(value)
-            elif c =="tween":
-                knob_list.values()
+                knoblist[args[0]]=knobs
+            elif c == "tween":
+                if args[0] in knoblist and args[1] in knoblist:
+                    pass
+                    #for i in knob_list.values():
+                        #if  = args[1]-args[]
+                    #if startValue:
+            elif c == "mesh":
                 pass
-                for i in knob_list.values():
-                    if  = args[1]-args[]
-
-                #if startValue
-     :       elif c == 'pop':
+            elif c == "shading":
+                pass
+            elif c == "light":
+                pass
+            elif c == "save_coord_system":
+                pass
+            elif c == 'pop':
                 stack.pop()
             elif c == 'display':
                 display(screen)
