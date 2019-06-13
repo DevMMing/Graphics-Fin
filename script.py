@@ -65,11 +65,11 @@ def second_pass( commands, num_frames ):
                     frames[i][knob]=startP+d*(i-startF)
             #add something to make lights move
         if c == "tween":
-            knob=command["knob"]
+            #tween update all knobs?
             startF=args[0]
             endF=args[1]
-            startP=knob_list0
-            endP=args[3]
+            startP=command['knob_list0']
+            endP=command['knob_list1']
             d=(endP-startP)/(endF-startF)
             for i in range(num_frames):
                 if i >=startF and i <= endF:

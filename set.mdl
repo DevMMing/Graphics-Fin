@@ -7,3 +7,6 @@ rotate z 360 spinny
 torus 0 0 0 75 125
 set spinny 0.1
 save_knobs chowdy
+set spinny 0.2
+save_knobs poody
+tween 0 49 chowdy poody
