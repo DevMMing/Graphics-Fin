@@ -64,6 +64,16 @@ def second_pass( commands, num_frames ):
                 if i >=startF and i <= endF:
                     frames[i][knob]=startP+d*(i-startF)
             #add something to make lights move
+        if c == "tween":
+            knob=command["knob"]
+            startF=args[0]
+            endF=args[1]
+            startP=knob_list0
+            endP=args[3]
+            d=(endP-startP)/(endF-startF)
+            for i in range(num_frames):
+                if i >=startF and i <= endF:
+                    frames[i][knob]=startP+d*(i-startF)
     return frames
 
 
@@ -197,14 +207,14 @@ def run(filename):
                 tmp = []
             elif c == 'push':
                 stack.append([x[:] for x in stack[-1]] )
-            elif c == 'set':#or set_knobs
+            elif c == 'set':#no set_knobs
                 symbols[command["knob"]][1]=args[0]
             elif c == 'save_knobs':
-                knobs=[]
-                for value in symbols[-1].values():
+                knobs=['knob_list']
+                for value in list(symbols.values()):
                     if value[0]=="knob":
                         knobs.append(value)
-                knoblist[args[0]]=knobs
+                knoblist[command['knob_list']]=knobs
             elif c == "tween":
                 if args[0] in knoblist and args[1] in knoblist:
                     pass
@@ -225,6 +235,7 @@ def run(filename):
                 display(screen)
             elif c == 'save':
                 save_extension(screen, args[0])
+            print(knoblist)
             # end operation loop
         if num_frames >1:
             filename = 'anim/'+name+("%03d"%int(i))
