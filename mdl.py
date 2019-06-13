@@ -328,7 +328,7 @@ def p_command_generate_rayfiles(p):
     commands.append({'op':p[1], 'args':None})
 
 def p_command_mesh(p):
-    """command : MESH CO TEXT
+    """command : MESH CO TEXT #thisfornow
                | MESH SYMBOL CO TEXT
                | MESH CO TEXT SYMBOL
                | MESH SYMBOL CO TEXT SYMBOL"""

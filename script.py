@@ -112,7 +112,7 @@ def run(filename):
                  [255,
                   255,
                   255]]
-
+        lights=[light]#will do lights later
         color = [0, 0, 0]
         symbols['.white'] = ['constants',
                              {'red': [0.2, 0.5, 0.5],
@@ -215,18 +215,18 @@ def run(filename):
                     if value[0]=="knob":
                         knobs.append(value)
                 knoblist[command['knob_list']]=knobs
-            elif c == "tween":
+            elif c == "tween":#tween need clarification
                 if args[0] in knoblist and args[1] in knoblist:
                     pass
                     #for i in knob_list.values():
                         #if  = args[1]-args[]
                     #if startValue:
-            elif c == "mesh":
+            elif c == "mesh":#will work on this
                 pass
-            elif c == "shading":
+            elif c == "shading":#will also work on this
                 pass
             elif c == "light":
-                pass
+                light=[symbols[command['light']][1]["location"],symbols[command['light']][1]["color"]]
             elif c == "save_coord_system":
                 pass
             elif c == 'pop':
