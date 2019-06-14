@@ -220,7 +220,7 @@ def run(filename):
 ##                    #for i in knob_list.values():
 ##                        #if  = args[1]-args[]
 ##                    #if startValue:
-            elif c == "mesh":#assume file means obj
+            elif c == "mesh":#assume file means obj #tween == budget vary
                 if command['constants'] and command['constants']!=":":
                         reflect = command['constants']
                 f=open(args[0]+".obj",'r')

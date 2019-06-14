@@ -71,7 +71,8 @@ def scanline_convert(polygons, i, screen, zbuffer, color, shading):
             y+= 1
         elif shading == "gouraud":
             pass
-        elif shading == "phong"
+        elif shading == "phong":
+            pass
 
 
 def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):

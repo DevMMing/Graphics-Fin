@@ -1,2 +1,2 @@
-mesh :icosahedron
+mesh :al
 save dyno.png
