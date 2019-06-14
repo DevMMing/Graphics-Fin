@@ -20,7 +20,7 @@ def draw_scanline(x0, z0, x1, z1, y, screen, zbuffer, color):
         x+= 1
         z+= delta_z
 
-def scanline_convert(polygons, i, screen, zbuffer, color):
+def scanline_convert(polygons, i, screen, zbuffer, color, shading):
     flip = False
     BOT = 0
     TOP = 2
@@ -53,22 +53,25 @@ def scanline_convert(polygons, i, screen, zbuffer, color):
     dz1 = (points[MID][2] - points[BOT][2]) / distance1 if distance1 != 0 else 0
 
     while y <= int(points[TOP][1]):
-        if ( not flip and y >= int(points[MID][1])):
-            flip = True
+        if shading=="flat":
+            if ( not flip and y >= int(points[MID][1])):
+                flip = True
 
-            dx1 = (points[TOP][0] - points[MID][0]) / distance2 if distance2 != 0 else 0
-            dz1 = (points[TOP][2] - points[MID][2]) / distance2 if distance2 != 0 else 0
-            x1 = points[MID][0]
-            z1 = points[MID][2]
+                dx1 = (points[TOP][0] - points[MID][0]) / distance2 if distance2 != 0 else 0
+                dz1 = (points[TOP][2] - points[MID][2]) / distance2 if distance2 != 0 else 0
+                x1 = points[MID][0]
+                z1 = points[MID][2]
 
-        #draw_line(int(x0), y, z0, int(x1), y, z1, screen, zbuffer, color)
-        draw_scanline(int(x0), z0, int(x1), z1, y, screen, zbuffer, color)
-        x0+= dx0
-        z0+= dz0
-        x1+= dx1
-        z1+= dz1
-        y+= 1
-
+            #draw_line(int(x0), y, z0, int(x1), y, z1, screen, zbuffer, color)
+            draw_scanline(int(x0), z0, int(x1), z1, y, screen, zbuffer, color)
+            x0+= dx0
+            z0+= dz0
+            x1+= dx1
+            z1+= dz1
+            y+= 1
+        elif shading == "gouraud":
+            pass
+        elif shading == "phong"
 
 
 def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
@@ -76,7 +79,7 @@ def add_polygon( polygons, x0, y0, z0, x1, y1, z1, x2, y2, z2 ):
     add_point(polygons, x1, y1, z1)
     add_point(polygons, x2, y2, z2)
 
-def draw_polygons( polygons, screen, zbuffer, view, ambient, light, symbols, reflect):
+def draw_polygons( polygons, screen, zbuffer, view, ambient, light, symbols, reflect, shading):
     if len(polygons) < 2:
         print 'Need at least 3 points to draw'
         return
@@ -90,7 +93,7 @@ def draw_polygons( polygons, screen, zbuffer, view, ambient, light, symbols, ref
         if normal[2] > 0:
 
             color = get_lighting(normal, view, ambient, light, symbols, reflect )
-            scanline_convert(polygons, point, screen, zbuffer, color)
+            scanline_convert(polygons, point, screen, zbuffer, color, shading)
 
             # draw_line( int(polygons[point][0]),
             #            int(polygons[point][1]),
