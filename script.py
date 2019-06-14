@@ -132,7 +132,7 @@ def run(filename):
         coords = []
         coords1 = []
         knoblist={}
-        
+        shading="flat"
         if num_frames > 1:
             for frame in frames[i]: 
                 symbols[frame][1] = frames[i][frame]
@@ -150,7 +150,7 @@ def run(filename):
                         args[0], args[1], args[2],
                         args[3], args[4], args[5])
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect, shading)
                 tmp = []
                 reflect = '.white'
             elif c == 'sphere':
@@ -159,7 +159,7 @@ def run(filename):
                 add_sphere(tmp,
                            args[0], args[1], args[2], args[3], step_3d)
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect, shading)
                 tmp = []
                 reflect = '.white'
             elif c == 'torus':
@@ -168,7 +168,7 @@ def run(filename):
                 add_torus(tmp,
                           args[0], args[1], args[2], args[3], args[4], step_3d)
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect, shading)
                 tmp = []
                 reflect = '.white'
             elif c == 'line':
@@ -221,6 +221,8 @@ def run(filename):
 ##                        #if  = args[1]-args[]
 ##                    #if startValue:
             elif c == "mesh":#assume file means obj
+                if command['constants'] and command['constants']!=":":
+                        reflect = command['constants']
                 f=open(args[0]+".obj",'r')
                 lines=[]
                 for line in f.readlines():
@@ -228,38 +230,36 @@ def run(filename):
                     if line !="":
                         lines.append(line.split())
                 print lines
+                vl=[]
+                vnl=[]
+                grps=[]
                 for line in lines:#s is not done yet but i don't think it matters
                     op=line[0]
-                    vl=[]
-                    vnl=[]
-                    grps=[]
                     if len(line)>1:
                         if op=="v":
-                            if len(line)==3:
+                            if len(line)==4:
                                 line.append(str(float(1)))
                             vl.append(line[1:])
-                            print(v1)
                         elif op=="vn":
                             vnl.append(line[1:])
-                        elif op =="f":#rather not do case for // ~~ #also indexing at 1 disgusting
+                        elif op =="f":#rather not do case for // ~~ #also indexing at 1 disgusting #pyramid is dumb 6!=5
                             if len(line)==4:
                                 i0=int(line[1])-1
                                 i1=int(line[2])-1
                                 i2=int(line[3])-1
-                                print(vl)
-                                add_polygon(tmp,vl[i0][0],vl[i0][1],vl[i0][2],vl[i1][0],vl[i1][1],vl[i1][2],vl[i2][0],vl[i2][1],vl[i2][2])
+##                                print(vl)
+##                                print(vl[i0])
+##                                print(vl[i1])
+##                                print(vl[i2])
+                                add_polygon(tmp,float(vl[i0][0]),float(vl[i0][1]),float(vl[i0][2]),float(vl[i1][0]),float(vl[i1][1]),float(vl[i1][2]),float(vl[i2][0]),float(vl[i2][1]),float(vl[i2][2]))
                             if len(line)==5:
                                 i0=int(line[1])-1
                                 i1=int(line[2])-1
                                 i2=int(line[3])-1
                                 i3=int(line[4])-1
-                                add_polygon(tmp,vl[i0][0],vl[i0][1],vl[i0][2],vl[i1][0],vl[i1][1],vl[i1][2],vl[i2][0],vl[i2][1],vl[i2][2])
-                                add_polygon(tmp,vl[i0][0],vl[i0][1],vl[i0][2],vl[i2][0],vl[i2][1],vl[i2][2],vl[i3][0],vl[i3][1],vl[i3][2])
+                                add_polygon(tmp,float(vl[i0][0]),float(vl[i0][1]),float(vl[i0][2]),float(vl[i1][0]),float(vl[i1][1]),float(vl[i1][2]),float(vl[i2][0]),float(vl[i2][1]),float(vl[i2][2]))
+                                add_polygon(tmp,float(vl[i0][0]),float(vl[i0][1]),float(vl[i0][2]),float(vl[i2][0]),float(vl[i2][1]),float(vl[i2][2]),float(vl[i3][0]),float(vl[i3][1]),float(vl[i3][2]))
                             grps[-1][1].append(tmp)
-                            matrix_mult( stack[-1], tmp )
-                            draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
-                            tmp = []
-                            reflect = '.white'
                         elif op == "g":#people who don't put names for g are degenerates #also i guess it just holds faces?
                             grps.append([line[1],[]])
                         elif op == "mtllib":#maybe pass Ns exponent later
@@ -286,11 +286,15 @@ def run(filename):
                                                           'blue': [float(list[i*6+1][3]),float(list[i*6+2][3]),float(list[i*6+3][3])]}]
                         elif op == "usemtl":
                             reflect=line[1]
+                matrix_mult( stack[-1], tmp )
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect, shading)
+                tmp = []
+                reflect = '.white'
             elif c == "shading":
-                if command['shade_type']=="gourand":
-                    pass
+                if command['shade_type']=="gouraud":
+                    shading="gouraud"
                 elif command["shade_type"]=="phong":
-                    pass
+                    shading= "phong"
             elif c == "light":
                 lights.append([symbols[command['light']][1]["location"],symbols[command['light']][1]["color"]])#i think i just need to edit all polygon abusers but unsure
 ##            elif c == "save_coord_system":
