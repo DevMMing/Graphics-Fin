@@ -3,9 +3,14 @@
 Matthew Ming
 
 ## Features List
-* light
+* set
+* saveknobs
+* tween(WIP)
+* light(WIP)
 * mesh
-* shading
-* New Shapes
+* save_coordinate_system(WIP)
+* shading(WIP)
+* vary non-linear (WIP)
+* New Shapes(WIP)
   * Cylinders
   * Cone
