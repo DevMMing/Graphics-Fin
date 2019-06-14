@@ -220,7 +220,7 @@ def run(filename):
 ##                    #for i in knob_list.values():
 ##                        #if  = args[1]-args[]
 ##                    #if startValue:
-            elif c == "mesh":#assume file means obj
+            elif c == "mesh":#assume file means obj #tween == budget vary
                 if command['constants'] and command['constants']!=":":
                         reflect = command['constants']
                 f=open(args[0]+".obj",'r')
@@ -255,7 +255,7 @@ def run(filename):
 ##                                print(vl)
 ##                                print(vl[i0])
 ##                                print(vl[i1])
-##                                print(vl[i2])                           #below looks like something good
+##                                print(vl[i2])                           #below looks like something good for most images(yet to find any that doesn't)
                                 add_polygon(tmp,float(vl[i0][0])*100+250,float(vl[i0][1])*100+250,float(vl[i0][2])*100,float(vl[i1][0])*100+250,float(vl[i1][1])*100+250,float(vl[i1][2])*100,float(vl[i2][0])*100+250,float(vl[i2][1])*100+250,float(vl[i2][2])*100)
                             if len(line)==5:
                                 i0=int(line[1])-1
@@ -267,7 +267,7 @@ def run(filename):
                             grps[-1][1].append(tmp)
                         elif op == "g":#people who don't put names for g are degenerates #also i guess it just holds faces?
                             grps.append([line[1],[]])
-                        elif op == "mtllib":#maybe pass Ns exponent later
+                        elif op == "mtllib":#maybe pass Ns exponent later >>> yeah
                             f=open(line[1],'r')
                             list=[]
                             for line in f.readlines():
