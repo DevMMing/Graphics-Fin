@@ -64,16 +64,16 @@ def second_pass( commands, num_frames ):
                 if i >=startF and i <= endF:
                     frames[i][knob]=startP+d*(i-startF)
             #add something to make lights move
-        if c == "tween":
-            #tween update all knobs?
-            startF=args[0]
-            endF=args[1]
-            startP=command['knob_list0']
-            endP=command['knob_list1']
-            d=(endP-startP)/(endF-startF)
-            for i in range(num_frames):
-                if i >=startF and i <= endF:
-                    frames[i][knob]=startP+d*(i-startF)
+##        if c == "tween":
+##            #tween update all knobs?
+##            startF=args[0]
+##            endF=args[1]
+##            startP=command['knob_list0']
+##            endP=command['knob_list1']
+##            d=(endP-startP)/(endF-startF)
+##            for i in range(num_frames):
+##                if i >=startF and i <= endF:
+##                    frames[i][knob]=startP+d*(i-startF)
     return frames
 
 
@@ -82,8 +82,7 @@ def second_pass( commands, num_frames ):
 http://paulbourke.net/geometry/circlesphere/
 https://www.gamedev.net/forums/topic/520806-can-anyone-explain-algorithm-behind-drawing-a-cylinder/
 """
-#adding save_coordinate_system later have to add new arg to all functions
-#shading i need to figure out
+
 def run(filename):
     """
     This function runs an mdl script
@@ -112,7 +111,7 @@ def run(filename):
                  [255,
                   255,
                   255]]
-        lights=[light]#will do lights later
+        lights=[light]
         color = [0, 0, 0]
         symbols['.white'] = ['constants',
                              {'red': [0.2, 0.5, 0.5],
@@ -207,35 +206,92 @@ def run(filename):
                 tmp = []
             elif c == 'push':
                 stack.append([x[:] for x in stack[-1]] )
-            elif c == 'set':#no set_knobs
-                symbols[command["knob"]][1]=args[0]
-            elif c == 'save_knobs':
-                knobs=['knob_list']
-                for value in list(symbols.values()):
-                    if value[0]=="knob":
-                        knobs.append(value)
-                knoblist[command['knob_list']]=knobs
-            elif c == "tween":#tween need clarification
-                if args[0] in knoblist and args[1] in knoblist:
+##            elif c == 'set':#no set_knobs
+##                symbols[command["knob"]][1]=args[0]
+##            elif c == 'save_knobs':
+##                knobs=['knob_list']
+##                for value in list(symbols.values()):
+##                    if value[0]=="knob":
+##                        knobs.append(value)
+##                knoblist[command['knob_list']]=knobs
+##            elif c == "tween":#tween need clarification
+##                if args[0] in knoblist and args[1] in knoblist:
+##                    pass
+##                    #for i in knob_list.values():
+##                        #if  = args[1]-args[]
+##                    #if startValue:
+            elif c == "mesh":#assume file means obj
+                f=open(args[0]+".obj",'r')
+                lines=[]
+                for line in f.readlines():
+                    line=line.strip()
+                    if line !="":
+                        lines.append(line.split())
+                print lines
+                for line in lines:#s is not done yet but i don't think it matters
+                    op=line[0]
+                    vl=[]
+                    vnl=[]
+                    grps=[]
+                    if len(line)>1:
+                        if op=="v":
+                            if len(line)==3:
+                                line.append(float(1))
+                            vl.append(line[1:])
+                        elif op=="vn":
+                            vnl.append(line[1:])
+                        elif op =="f":#rather not do case for // ~~ #also indexing at 1 disgusting
+                            if len(line)==4:
+                                i0=int(line[1])-1
+                                i1=int(line[2])-1
+                                i2=int(line[3])-1
+                                add_polygon(tmp,vl[i0][0],vl[i0][1],vl[i0][2],vl[i1][0],vl[i1][1],vl[i1][2],vl[i2][0],vl[i2][1],vl[i2][2])
+                            if len(line)==5:
+                                i0=int(line[1])-1
+                                i1=int(line[2])-1
+                                i2=int(line[3])-1
+                                i3=int(line[4])-1
+                                add_polygon(tmp,vl[i0][0],vl[i0][1],vl[i0][2],vl[i1][0],vl[i1][1],vl[i1][2],vl[i2][0],vl[i2][1],vl[i2][2])
+                                add_polygon(tmp,vl[i0][0],vl[i0][1],vl[i0][2],vl[i2][0],vl[i2][1],vl[i2][2],vl[i3][0],vl[i3][1],vl[i3][2])
+                            grps[-1][1].append(tmp)
+                            matrix_mult( stack[-1], tmp )
+                            draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                            tmp = []
+                            reflect = '.white'
+                        elif op == "g":#people who don't put names for g are degenerates #also i guess it just holds faces?
+                            grps.append([line[1],[]])
+                        elif op == "mtllib":#maybe pass Ns exponent later
+                            f=open(line[1],'r')
+                            list=[]
+                            for line in f.readlines():
+                                line=line.strip()
+                                if line !="":
+                                    list.append(line.split())
+                            print(list)#rot 6 newmtl colors
+                            for i in range(len(list)/6):
+                                print(list[i*6+3])
+                                symbols[list[i*6][1]]=["constants",#newmtl#check for specular that is .5 by default
+                                                         {'red': [float(list[i*6+1][1]), float(list[i*6+2][1]), float(list[i*6+3][1])],
+                                                          'green': [float(list[i*6+1][2]),float(list[i*6+2][2]),float(list[i*6+3][2])],
+                                                          'blue': [float(list[i*6+1][3]),float(list[i*6+2][3]),float(list[i*6+3][3])]}]
+                        elif op == "usemtl":
+                            reflect=line[1]
+            elif c == "shading"
+                if command['shade_type']=="gourand":
                     pass
-                    #for i in knob_list.values():
-                        #if  = args[1]-args[]
-                    #if startValue:
-            elif c == "mesh":#will work on this
-                pass
-            elif c == "shading":#will also work on this
-                pass
+                elif command["shade_type"]=="phong":
+                    pass
             elif c == "light":
-                light=[symbols[command['light']][1]["location"],symbols[command['light']][1]["color"]]
-            elif c == "save_coord_system":
-                pass
+                lights.append([symbols[command['light']][1]["location"],symbols[command['light']][1]["color"]])#i think i just need to edit all polygon abusers but unsure
+##            elif c == "save_coord_system":
+##                pass
             elif c == 'pop':
                 stack.pop()
             elif c == 'display':
                 display(screen)
             elif c == 'save':
                 save_extension(screen, args[0])
-            print(knoblist)
+            #print(knoblist)
             # end operation loop
         if num_frames >1:
             filename = 'anim/'+name+("%03d"%int(i))
