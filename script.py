@@ -237,33 +237,21 @@ def run(filename):
                     op=line[0]
                     if len(line)>1:
                         if op=="v":
-                            if len(line)==4:
-                                line.append(str(float(1)))
+##                            if len(line)==4:
+##                                line.append(str(float(1)))
                             vl.append(line[1:])
                         elif op=="vn":
                             vnl.append(line[1:])
-                        elif op =="f":#rather not do case for // ~~ #also indexing at 1 disgusting #pyramid is dumb 6!=5 # have to find a way to translate mesh to seeable range
-                            if len(line)==4:
-                                if "//" in line or "/" in line:
-                                    i0=int(line[1][0])-1
-                                    i1=int(line[2][0])-1
-                                    i2=int(line[3][0])-1
+                        elif op =="f":#indexing at 1 disgusting #pyramid is dumb 6!=5 #WOW faces have more than 4 or 5 vertices COOL
+                            indexList=[]
+                            for i in range(1,len(line)):
+                                if "/" in line:
+                                        indexList.append(int(line[i][0])-1)
                                 else:
-                                    i0=int(line[1])-1
-                                    i1=int(line[2])-1
-                                    i2=int(line[3])-1
-##                                print(vl)
-##                                print(vl[i0])
-##                                print(vl[i1])
-##                                print(vl[i2])                           #below looks like something good for most images(yet to find any that doesn't)
-                                add_polygon(tmp,float(vl[i0][0])*100+250,float(vl[i0][1])*100+250,float(vl[i0][2])*100,float(vl[i1][0])*100+250,float(vl[i1][1])*100+250,float(vl[i1][2])*100,float(vl[i2][0])*100+250,float(vl[i2][1])*100+250,float(vl[i2][2])*100)
-                            if len(line)==5:
-                                i0=int(line[1])-1
-                                i1=int(line[2])-1
-                                i2=int(line[3])-1
-                                i3=int(line[4])-1
-                                add_polygon(tmp,float(vl[i0][0])*100+250,float(vl[i0][1])*100+250,float(vl[i0][2])*100,float(vl[i1][0])*100+250,float(vl[i1][1])*100+250,float(vl[i1][2])*100,float(vl[i2][0])*100+250,float(vl[i2][1])*100+250,float(vl[i2][2])*100)
-                                add_polygon(tmp,float(vl[i0][0])*100+250,float(vl[i0][1])*100+250,float(vl[i0][2])*100,float(vl[i2][0])*100+250,float(vl[i2][1])*100+250,float(vl[i2][2])*100,float(vl[i3][0])*100+250,float(vl[i3][1])*100+250,float(vl[i3][2])*100)
+                                    indexList.append(int(line[i])-1)
+                                           #below looks like something good for most images(yet to find any that doesn't)
+                            for i in range(2,len(line)-1):
+                                add_polygon(tmp,float(vl[indexList[0]][0])*100+250,float(vl[indexList[0]][1])*100+250,float(vl[indexList[0]][2])*100,float(vl[indexList[i-1]][0])*100+250,float(vl[indexList[i-1]][1])*100+250,float(vl[indexList[i-1]][2])*100,float(vl[indexList[i]][0])*100+250,float(vl[indexList[i]][1])*100+250,float(vl[indexList[i]][2])*100)
                             grps[-1][1].append(tmp)
                         elif op == "g":#people who don't put names for g are degenerates #also i guess it just holds faces?
                             grps.append([line[1],[]])
@@ -289,8 +277,8 @@ def run(filename):
                                                          {'red': [float(list[i*6+1][1]), float(list[i*6+2][1]), float(list[i*6+3][1])],
                                                           'green': [float(list[i*6+1][2]),float(list[i*6+2][2]),float(list[i*6+3][2])],
                                                           'blue': [float(list[i*6+1][3]),float(list[i*6+2][3]),float(list[i*6+3][3])]}]
-                        elif op == "usemtl":
-                            reflect=line[1]
+##                        elif op == "usemtl":#black mtl .... HMMMM sus af
+##                            reflect=line[1]
                 matrix_mult( stack[-1], tmp )
                 draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect, shading)
                 tmp = []
