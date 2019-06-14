@@ -352,8 +352,6 @@ illum 2
 Ns 200.0000
 
 
-#newmtl bone
-
 newmtl teeth
 Ka 0.6408 0.5554 0.3845
 Kd 0.9837 0.7959 0.4694
@@ -366,11 +364,6 @@ Kd 0.4776 0.1959 0.0000
 Ks 0.5796 0.5796 0.5796
 illum 2
 Ns 134.8800
-
-
-newmtl china
-Kd 1.0000 1.0000 1.0000
-illum 0
 
 
 newmtl dkred

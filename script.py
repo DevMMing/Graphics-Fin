@@ -236,8 +236,9 @@ def run(filename):
                     if len(line)>1:
                         if op=="v":
                             if len(line)==3:
-                                line.append(float(1))
+                                line.append(str(float(1)))
                             vl.append(line[1:])
+                            print(v1)
                         elif op=="vn":
                             vnl.append(line[1:])
                         elif op =="f":#rather not do case for // ~~ #also indexing at 1 disgusting
@@ -245,6 +246,7 @@ def run(filename):
                                 i0=int(line[1])-1
                                 i1=int(line[2])-1
                                 i2=int(line[3])-1
+                                print(vl)
                                 add_polygon(tmp,vl[i0][0],vl[i0][1],vl[i0][2],vl[i1][0],vl[i1][1],vl[i1][2],vl[i2][0],vl[i2][1],vl[i2][2])
                             if len(line)==5:
                                 i0=int(line[1])-1
@@ -267,16 +269,24 @@ def run(filename):
                                 line=line.strip()
                                 if line !="":
                                     list.append(line.split())
-                            print(list)#rot 6 newmtl colors
+                            i=0
+                            while i< len(list):
+                                if list[i][0]=="illum" and list[i][1]=="1":
+                                    list.insert(i+1,['Ns','30.0'])#assume defaults bit doubt but w/e
+                                    list.insert(i,['Ks','0.5','0.5','0.5'])
+                                    i+=1
+                                i+=1
+                                    
+                            print(len(list))#rot 6 newmtl colors
                             for i in range(len(list)/6):
-                                print(list[i*6+3])
+                                #print(list[i*6+3])
                                 symbols[list[i*6][1]]=["constants",#newmtl#check for specular that is .5 by default
                                                          {'red': [float(list[i*6+1][1]), float(list[i*6+2][1]), float(list[i*6+3][1])],
                                                           'green': [float(list[i*6+1][2]),float(list[i*6+2][2]),float(list[i*6+3][2])],
                                                           'blue': [float(list[i*6+1][3]),float(list[i*6+2][3]),float(list[i*6+3][3])]}]
                         elif op == "usemtl":
                             reflect=line[1]
-            elif c == "shading"
+            elif c == "shading":
                 if command['shade_type']=="gourand":
                     pass
                 elif command["shade_type"]=="phong":

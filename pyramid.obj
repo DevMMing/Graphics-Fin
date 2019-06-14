@@ -1,7 +1,9 @@
 # OBJ file created by ply_to_obj.c
 #
 g Object001
+
 mtllib ./vp.mtl
+
 v  0  0  0
 v  1  0  0
 v  1  1  0
