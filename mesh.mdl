@@ -5,3 +5,4 @@ shading phong
 mesh :SuperMario
 mesh :cat
 save dyno.png
+display
