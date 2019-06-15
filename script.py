@@ -77,7 +77,18 @@ def second_pass( commands, num_frames ):
     return frames
 
 
-#cylinder/frustum/cone
+def get_lights(symbols):
+    ambient = [50, 50, 50]
+    lights = {}
+
+    for symbol in symbols:
+        if symbols[symbol][0] == 'light':
+            lightsource = symbols[symbol][1]
+            lights[symbol] = lightsource
+        elif symbol == 'ambient':
+            ambient = symbols[symbol][1:]
+
+    return (lights, ambient)
 """
 http://paulbourke.net/geometry/circlesphere/
 https://www.gamedev.net/forums/topic/520806-can-anyone-explain-algorithm-behind-drawing-a-cylinder/
@@ -97,7 +108,7 @@ def run(filename):
 
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
-
+    (lights, ambient) = get_lights(symbols)
     for i in range(int(num_frames)):
         view = [0,
                 0,
@@ -111,7 +122,6 @@ def run(filename):
                  [255,
                   255,
                   255]]
-        lights=[light]
         color = [0, 0, 0]
         symbols['.white'] = ['constants',
                              {'red': [0.2, 0.5, 0.5],
@@ -150,7 +160,7 @@ def run(filename):
                         args[0], args[1], args[2],
                         args[3], args[4], args[5])
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect, shading)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, lights, symbols, reflect, shading)
                 tmp = []
                 reflect = '.white'
             elif c == 'sphere':
@@ -159,7 +169,7 @@ def run(filename):
                 add_sphere(tmp,
                            args[0], args[1], args[2], args[3], step_3d)
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect, shading)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, lights, symbols, reflect, shading)
                 tmp = []
                 reflect = '.white'
             elif c == 'torus':
@@ -168,7 +178,7 @@ def run(filename):
                 add_torus(tmp,
                           args[0], args[1], args[2], args[3], args[4], step_3d)
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect, shading)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, lights, symbols, reflect, shading)
                 tmp = []
                 reflect = '.white'
             elif c == 'line':
@@ -229,12 +239,13 @@ def run(filename):
                     line=line.strip()
                     if line !="":
                         lines.append(line.split())
-                print lines
+##                print lines
                 vl=[]
                 vnl=[]
                 grps=[]
                 for line in lines:#s is not done yet but i don't think it matters
                     op=line[0]
+                    #print(line)
                     if len(line)>1:
                         if op=="v":
 ##                            if len(line)==4:
@@ -245,13 +256,15 @@ def run(filename):
                         elif op =="f":#indexing at 1 disgusting #pyramid is dumb 6!=5 #WOW faces have more than 4 or 5 vertices COOL
                             indexList=[]
                             for i in range(1,len(line)):
-                                if "/" in line:
-                                        indexList.append(int(line[i][0])-1)
+                                if "/" in line[i]:
+                                    indexList.append(int(line[i].split("/")[0])-1)
                                 else:
                                     indexList.append(int(line[i])-1)
                                            #below looks like something good for most images(yet to find any that doesn't)
                             for i in range(2,len(line)-1):
-                                add_polygon(tmp,float(vl[indexList[0]][0])*100+250,float(vl[indexList[0]][1])*100+250,float(vl[indexList[0]][2])*100,float(vl[indexList[i-1]][0])*100+250,float(vl[indexList[i-1]][1])*100+250,float(vl[indexList[i-1]][2])*100,float(vl[indexList[i]][0])*100+250,float(vl[indexList[i]][1])*100+250,float(vl[indexList[i]][2])*100)
+                                add_polygon(tmp,float(vl[indexList[0]][0])*100+250,float(vl[indexList[0]][1])*100+100,float(vl[indexList[0]][2])*100,
+                                            float(vl[indexList[i-1]][0])*100+250,float(vl[indexList[i-1]][1])*100+100,float(vl[indexList[i-1]][2])*100,
+                                            float(vl[indexList[i]][0])*100+250,float(vl[indexList[i]][1])*100+100,float(vl[indexList[i]][2])*100)
                             grps[-1][1].append(tmp)
                         elif op == "g":#people who don't put names for g are degenerates #also i guess it just holds faces?
                             grps.append([line[1],[]])
@@ -280,7 +293,7 @@ def run(filename):
 ##                        elif op == "usemtl":#black mtl .... HMMMM sus af
 ##                            reflect=line[1]
                 matrix_mult( stack[-1], tmp )
-                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect, shading)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, lights, symbols, reflect, shading)
                 tmp = []
                 reflect = '.white'
             elif c == "shading":
@@ -288,8 +301,6 @@ def run(filename):
                     shading="gouraud"
                 elif command["shade_type"]=="phong":
                     shading= "phong"
-            elif c == "light":
-                lights.append([symbols[command['light']][1]["location"],symbols[command['light']][1]["color"]])#i think i just need to edit all polygon abusers but unsure
 ##            elif c == "save_coord_system":
 ##                pass
             elif c == 'pop':

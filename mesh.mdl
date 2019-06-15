@@ -1,2 +1,7 @@
-mesh :al
+light red -1 0.2 1 255 0 0
+light white -3 3 -3 255 255 255
+light blue 0 0 -2 0 0 255
+shading phong
+mesh :SuperMario
+mesh :cat
 save dyno.png
