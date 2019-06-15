@@ -6,6 +6,7 @@ Matthew Ming
 * light
 * mesh
 * shading
+
 The format for these commands are based off the instructions in the MDL.spec.
 To invoke the light command, type 
 > light symbol x y z r g b
